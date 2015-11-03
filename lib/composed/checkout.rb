@@ -18,7 +18,7 @@ module Composed
     end
 
     def price_item(item, quantity)
-      @pricing_rules.fetch(item).call
+      @pricing_rules.fetch(item).call(quantity)
     end
   end
 end

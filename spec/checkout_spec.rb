@@ -9,7 +9,9 @@ RSpec.describe Composed::Checkout do
   context 'should price given examples correctly' do
     let(:pricing_rules) do
       {
-        'FR1' => Proc.new { 3.11 }
+        'FR1' => Proc.new { |q| ((q + 1).to_i / 2) * 3.11 },
+        'SR1' => Proc.new { |q| q * (q >= 3 ? 4.50 : 5.00) },
+        'CF1' => Proc.new { |q| q * 11.23 },
       }
     end
     let(:co) { Composed::Checkout.new(pricing_rules) }
@@ -23,26 +25,27 @@ RSpec.describe Composed::Checkout do
       expect(co.price).to eq(3.11)
     end
 
-    xit 'FR1,SR1,FR1,FR1,CF1' do
-      %w(FR1 SR1 FR1 FR1 CF1).each do |item|
-        co.scan(item)
-      end
-      expect(co.price).to eq(22.45)
-    end
-
-    xit 'FR1,FR1' do
+    it 'FR1,FR1' do
       %w(FR1 FR1).each do |item|
         co.scan(item)
       end
       expect(co.price).to eq(3.11)
     end
 
-    xit 'SR1,SR1,FR1,SR1' do
+    it 'SR1,SR1,FR1,SR1' do
       %w(SR1 SR1 FR1 SR1).each do |item|
         co.scan(item)
       end
       expect(co.price).to eq(16.61)
     end
+
+    it 'FR1,SR1,FR1,FR1,CF1' do
+      %w(FR1 SR1 FR1 FR1 CF1).each do |item|
+        co.scan(item)
+      end
+      expect(co.price).to eq(22.45)
+    end
+
   end
 
 end
