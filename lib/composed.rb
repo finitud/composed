@@ -1,5 +1,6 @@
 require "composed/version"
+require "composed/checkout"
 
 module Composed
-  # Your code goes here...
+
 end
