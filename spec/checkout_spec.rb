@@ -7,11 +7,20 @@ RSpec.describe Composed::Checkout do
   end
 
   context 'should price given examples correctly' do
-    let(:pricing_rules) { nil }
+    let(:pricing_rules) do
+      {
+        'FR1' => Proc.new { 3.11 }
+      }
+    end
     let(:co) { Composed::Checkout.new(pricing_rules) }
 
     it 'empty checkout' do
       expect(co.price).to eq(0.0)
+    end
+
+    it 'single item' do
+      co.scan('FR1')
+      expect(co.price).to eq(3.11)
     end
 
     xit 'FR1,SR1,FR1,FR1,CF1' do

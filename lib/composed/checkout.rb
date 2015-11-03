@@ -12,9 +12,13 @@ module Composed
     def price
       total = 0.0
       @content.each do |item, quantity|
-        total += @pricing_rules.price(item, quantity)
+        total += price_item(item, quantity)
       end
       total
+    end
+
+    def price_item(item, quantity)
+      @pricing_rules.fetch(item).call
     end
   end
 end
